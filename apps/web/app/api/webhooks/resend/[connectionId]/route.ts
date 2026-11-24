@@ -8,6 +8,12 @@ import { supabaseAdmin } from "../../../../../lib/supabase-admin";
 const eventSchema = z.object({ type: z.string().max(100), created_at: z.string().datetime({ offset: true }), data: z.object({ email_id: z.string().min(1).max(200), bounce: z.object({ type: z.string().max(80).optional(), subType: z.string().max(80).optional() }).optional() }) });
 const kinds = new Set(["sent", "delivered", "opened", "clicked", "bounced", "complained", "failed", "delivery_delayed", "suppressed"]);
 
+export async function GET(_request: Request, { params }: { params: Promise<{ connectionId: string }> }) {
+  const { connectionId } = await params;
+  if (connectionId !== "default") return NextResponse.json({ error: "Unknown connection" }, { status: 404 });
+  return NextResponse.json({ ok: true, service: "Resend webhook endpoint", accepts: "POST", message: "Ready for signed Resend webhook events." });
+}
+
 async function rawPayload(request: Request) {
   const reader = request.body?.getReader(); if (!reader) return "";
   const chunks: Uint8Array[] = []; let size = 0;
