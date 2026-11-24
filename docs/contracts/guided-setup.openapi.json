@@ -1,0 +1,264 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Marketing OS guided setup",
+    "version": "1.0.0"
+  },
+  "paths": {
+    "/api/dashboard/setup": {
+      "get": {
+        "operationId": "getGuidedSetup",
+        "summary": "Read persisted setup evidence without sending or changing data",
+        "security": [
+          {
+            "adminCookie": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "SetupSnapshot: version, checked_at, verification (verified/partial/unavailable), seven steps, completed count, current step, complete, and saved-draft readiness. Unknown sources remain unable_to_verify; verification=verified means reads succeeded, not that sending is ready. Never contains secrets. Tracking is separate from send readiness. Client caches for 30 seconds, invalidates after acknowledged writes and on stale focus. No provider requests.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SetupSnapshot"
+                }
+              }
+            },
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "const": "private, no-store"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "No valid administrator session. Sign in again.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "required": [
+                    "error"
+                  ],
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "adminCookie": {
+        "type": "apiKey",
+        "in": "cookie",
+        "name": "marketing_os_admin"
+      }
+    },
+    "schemas": {
+      "State": {
+        "type": "string",
+        "enum": [
+          "not_started",
+          "in_progress",
+          "complete",
+          "needs_attention",
+          "unable_to_verify"
+        ]
+      },
+      "StepId": {
+        "type": "string",
+        "enum": [
+          "connection",
+          "domain",
+          "sender",
+          "tracking",
+          "contacts",
+          "campaign",
+          "launch"
+        ]
+      },
+      "Action": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "page"
+        ],
+        "properties": {
+          "page": {
+            "type": "string",
+            "enum": [
+              "Overview",
+              "Email Setup",
+              "Contacts",
+              "Compose & Send",
+              "Active Sending",
+              "Campaign History",
+              "Recipient Activity",
+              "Suppressions",
+              "Settings"
+            ]
+          },
+          "target": {
+            "type": "string",
+            "maxLength": 80
+          },
+          "campaignId": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      },
+      "Step": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "state",
+          "reason",
+          "action"
+        ],
+        "properties": {
+          "id": {
+            "$ref": "#/components/schemas/StepId"
+          },
+          "state": {
+            "$ref": "#/components/schemas/State"
+          },
+          "reason": {
+            "type": "string"
+          },
+          "action": {
+            "$ref": "#/components/schemas/Action"
+          }
+        }
+      },
+      "Check": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "state",
+          "reason",
+          "action",
+          "label"
+        ],
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "state": {
+            "$ref": "#/components/schemas/State"
+          },
+          "reason": {
+            "type": "string"
+          },
+          "action": {
+            "$ref": "#/components/schemas/Action"
+          },
+          "label": {
+            "type": "string"
+          }
+        }
+      },
+      "SetupSnapshot": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "version",
+          "checked_at",
+          "verification",
+          "steps",
+          "completed",
+          "current",
+          "complete",
+          "readiness"
+        ],
+        "properties": {
+          "version": {
+            "const": 1
+          },
+          "checked_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "verification": {
+            "type": "string",
+            "enum": [
+              "verified",
+              "partial",
+              "unavailable"
+            ]
+          },
+          "steps": {
+            "type": "array",
+            "minItems": 7,
+            "maxItems": 7,
+            "items": {
+              "$ref": "#/components/schemas/Step"
+            }
+          },
+          "completed": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 7
+          },
+          "current": {
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/StepId"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "complete": {
+            "type": "boolean"
+          },
+          "readiness": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "ready",
+              "draft_name",
+              "checks",
+              "tracking"
+            ],
+            "properties": {
+              "ready": {
+                "type": "boolean",
+                "description": "Advisory only. Never bypasses the sending engine, authorization or live consent/suppression rechecks."
+              },
+              "draft_name": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "checks": {
+                "type": "array",
+                "minItems": 9,
+                "maxItems": 9,
+                "items": {
+                  "$ref": "#/components/schemas/Check"
+                }
+              },
+              "tracking": {
+                "$ref": "#/components/schemas/State"
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

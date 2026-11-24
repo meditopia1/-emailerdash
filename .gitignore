@@ -1,0 +1,14 @@
+.env
+.env.local
+.env.*.local
+!.env.example
+node_modules/
+.next/
+.next-dev/
+.next-test/
+.corepack/
+.pnpm-store/
+artifacts/
+test-results/
+playwright-report/
+supabase/.temp/

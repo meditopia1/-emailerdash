@@ -1,0 +1,7 @@
+"use client";
+import { FormEvent, useState } from "react";
+import { useRouter } from "next/navigation";
+
+export default function LoginPage() { const router = useRouter(); const [error, setError] = useState(""); const [busy, setBusy] = useState(false);
+  async function submit(event: FormEvent<HTMLFormElement>) { event.preventDefault(); setBusy(true); setError(""); const form = new FormData(event.currentTarget); const response = await fetch("/api/auth/login", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ username: form.get("username"), password: form.get("password") }) }); if (!response.ok) setError("Invalid username or password"); else router.push("/"); setBusy(false); }
+  return <main className="auth-page"><section className="auth-card"><p className="eyebrow">MARKETING OS LITE</p><h1>Welcome back.</h1><p className="muted">Sign in to your private dashboard.</p><form onSubmit={submit}><label>Username<input name="username" autoComplete="username" required /></label><label>Password<input name="password" type="password" autoComplete="current-password" required /></label>{error && <small className="form-error">{error}</small>}<button className="primary-button" disabled={busy} type="submit">{busy ? "Signing in…" : "Sign in"}</button></form><small>Single administrator access. Credentials are configured server-side.</small></section></main>; }

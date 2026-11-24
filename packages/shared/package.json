@@ -1,0 +1,8 @@
+{
+  "name": "@marketing-os/shared",
+  "private": true,
+  "version": "0.1.0",
+  "exports": { ".": "./src/index.ts" },
+  "scripts": { "typecheck": "tsc --noEmit" },
+  "devDependencies": { "typescript": "5.8.3" }
+}

@@ -1,0 +1,19 @@
+{
+  "name": "marketing-os",
+  "private": true,
+  "packageManager": "pnpm@10.12.1",
+  "scripts": {
+    "dev": "node scripts/dev-all.mjs",
+    "dev:web": "pnpm --filter web dev",
+    "worker:dev": "pnpm --filter worker dev",
+    "worker": "pnpm --filter worker start",
+    "build": "pnpm -r build",
+    "typecheck": "pnpm -r typecheck",
+    "lint": "pnpm --filter web lint",
+    "test": "pnpm -r test",
+    "test:ui": "playwright test"
+  },
+  "devDependencies": {
+    "@playwright/test": "1.56.1"
+  }
+}

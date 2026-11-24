@@ -1,0 +1,27 @@
+import type { HelpArticle } from "./types";
+export const articles: HelpArticle[] = [
+  { id: "connection", title: "Connect and validate Resend", description: "A saved key is configuration, not proof of sending access.", page: "Email Setup", prerequisites: ["An active Resend account and an API key from the same team as your domain."], destination: { page: "Email Setup", target: "setup-connection" }, link: { label: "Open Resend API keys", href: "https://resend.com/api-keys" }, instructions: [
+    { title: "Save the correct key", text: "Paste a Sending Access key and choose Connect Resend or Replace API key. A management checkbox alone does not save the pasted key. Secrets stay server-side." },
+    { title: "Choose domain access", text: "Sending Access is enough for normal sending. To import domains here, use Full Access from the same Resend team, enable managed domain setup and save that preference." },
+    { title: "Validate explicitly", text: "After configuring a sender, open Tracking & testing → Send test email. Choose your sender and a destination you control, confirm and send one test. Saving settings never sends email." },
+    { title: "Recover safely", text: "If access is denied, check key permissions, team and exact domain. If a test times out, check Recent explicit tests and Resend Emails before retrying: the message may already have been accepted." },
+  ] },
+  { id: "domain", title: "Verify your exact sending domain", description: "Your domain is the part after @, for example example.com.", page: "Email Setup", prerequisites: ["Access to your domain's DNS provider.", "A connected Resend account."], destination: { page: "Email Setup", target: "setup-domain" }, link: { label: "Open Resend Domains", href: "https://resend.com/domains" }, instructions: [
+    { title: "Choose a connection method", text: "With Full Access, load provider domains, choose the domain and link it. With Sending Access, verify the domain in Resend first and link it manually here. Manual entries remain self-reported, not provider-verified." },
+    { title: "Use only the domain", text: "Enter example.com or updates.example.com. Put support@example.com in the sender's From address instead. Parent-domain verification does not automatically approve a sending subdomain." },
+    { title: "Check DNS carefully", text: "Copy the exact host, type, value, priority and TTL provided by Resend into your DNS provider. Keep existing website and incoming-mail records. Do not guess replacements." },
+    { title: "Refresh verification", text: "Request verification and allow DNS propagation, then refresh status. If still pending, compare each required record in Resend. A successful sending test proves access, not DNS verification." },
+  ] },
+  { id: "sender", title: "Create your sending identity", description: "Recipients see your display name and From address.", page: "Email Setup", prerequisites: ["A configured exact sending domain."], destination: { page: "Email Setup", target: "setup-sender" }, instructions: [
+    { title: "Match the From domain", text: "For example.com, use an authorized address such as support@example.com. Select updates.example.com separately if that is the domain after @." },
+    { title: "Add recognizable details", text: "Display name identifies your company or team. Reply-To is optional and may use a different domain. Company name and physical mailing address appear in the email footer." },
+    { title: "Save or edit, then choose a default", text: "Save the identity. If the address already exists, use Edit identity on its saved card instead of adding it twice. Make default sender is a separate explicit action." },
+    { title: "Send one explicit test", text: "In Tracking & testing, choose Send test email, select this sender and a mailbox you control. Changing sender details requires another test. An accepted test is not proof of delivery." },
+  ] },
+  { id: "tracking", title: "Configure tracking and test email", description: "Configured tracking and received signed events are different states.", page: "Email Setup", prerequisites: ["A saved sender to send a test.", "A publicly reachable deployed webhook endpoint."], destination: { page: "Email Setup", target: "setup-tracking" }, link: { label: "Open Resend Webhooks", href: "https://resend.com/webhooks" }, instructions: [
+    { title: "Connect signed events", text: "Copy the displayed endpoint into Resend Webhooks. Select email.sent, email.delivered, email.opened, email.clicked, email.bounced, email.complained, email.failed, email.delivery_delayed and email.suppressed. Save the webhook signing secret here, never in a chat or source file." },
+    { title: "Confirm evidence", text: "Configured means a signing secret exists. Verified event received means this application accepted a correctly signed event. Localhost cannot receive Resend callbacks without a public endpoint; check the deployed app's environment too." },
+    { title: "Enable engagement tracking", text: "Review the sender domain's open and click tracking settings. Privacy protections, prefetching and scanners can affect counts. Delivery is confirmed by delivered events, not Resend acceptance." },
+    { title: "Test, then review", text: "Choose Send test email, your sender and a destination you own; confirm explicitly. Check Recent explicit tests, the destination inbox and Resend Emails. If a webhook fails, check endpoint, signing secret and enabled events before refreshing health." },
+  ] },
+];

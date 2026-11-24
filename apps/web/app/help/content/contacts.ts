@@ -1,0 +1,7 @@
+import type { HelpArticle } from "./types";
+export const articles: HelpArticle[] = [{ id: "contacts", title: "Build an eligible audience", description: "Add opted-in contacts while keeping unsubscribe and suppression protections.", page: "Contacts", prerequisites: ["Real permission to contact each recipient."], destination: { page: "Contacts", target: "audience-contacts" }, instructions: [
+  { title: "Add one contact", text: "Choose Add contact and enter their details. Saving records your confirmation that they already opted in, without additional consent fields. Existing unsubscribes and sending blocks cannot be overridden by adding a contact." },
+  { title: "Import a CSV", text: "Choose Import contacts, upload the file, map columns and review validation. Correct invalid rows and duplicates before confirming. Large imports need the import worker running; review Imports for progress and row errors." },
+  { title: "Narrow the audience", text: "Use Search and Filters for current results. Save conditions as a dynamic segment, or collect fixed members in a static list. A segment's membership can change as contacts change." },
+  { title: "Check sending eligibility", text: "Review the Sending eligibility column or open a contact. Suppressed, unsubscribed, archived and non-consenting contacts stay excluded. A suppressed address must not be re-enabled simply to make a campaign eligible." },
+] }];
