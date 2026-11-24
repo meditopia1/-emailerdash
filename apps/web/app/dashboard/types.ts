@@ -4,6 +4,8 @@ export type Campaign = {
   failed_count: number; blocked_count: number; created_at: string; started_at?: string | null; completed_at?: string | null;
   recipient_count?: number | null; queued_count?: number | null; processed_count?: number | null;
 };
+export type CampaignRecipient = { id: string; email: string; name: string | null; status: string; error_message?: string | null; accepted_at?: string | null; delivered_at?: string | null; latest_event_at?: string | null };
+export type CampaignDetail = { campaign: Campaign & { sender_name: string; from_email: string; subject: string; content_html: string | null; content_text: string | null }; recipients: CampaignRecipient[] };
 export type Contact = { id: string; email: string; name: string | null; consent_source: string; consented_at: string; imported_at: string; eligible?: boolean; reason?: string | null };
 export type SenderChoice = { id: string; sender_name: string; from_email: string; reply_to: string | null; is_default: boolean };
 export type SenderSettings = { sender_name: string; from_email: string; reply_to: string | null; company_name: string; physical_address: string; verified_domain?: string | null; identities?: SenderChoice[] };

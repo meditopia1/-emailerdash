@@ -11,7 +11,7 @@ export type DraftFieldProps = { draft: Draft; onChange: (patch: Partial<Draft>) 
 export function StartFields({ draft, onChange, readOnly, errors = {} }: DraftFieldProps) {
   return <fieldset className="builder-fieldset" disabled={readOnly}>
     <Field label="Campaign name" error={errors.name}><input name="name" required maxLength={200} value={draft.name} onChange={event => onChange({ name: event.target.value })} placeholder="e.g. Monthly product update" /></Field>
-    <p className="builder-help">An internal name to keep your campaigns organized. Your recipients won't see it.</p>
+    <p className="builder-help">An internal name to keep your campaigns organized. Your recipients won&apos;t see it.</p>
   </fieldset>;
 }
 
